@@ -3,12 +3,8 @@ import {AuthService} from "../../services/auth.service";
 import {TokenStorageService} from "../../services/token-storage.service";
 import {NotificationService} from "../../services/notification.service";
 import {Router} from "@angular/router";
-import {FormBuilder, FormGroup, Validator, Validators} from "@angular/forms";
-import {formatDate} from "@angular/common";
+import {FormBuilder, FormControl, FormGroup, Validator, Validators} from "@angular/forms";
 import {UserService} from "../../services/user.service";
-import {User} from "../../models/User";
-import {Role} from "../../models/Role";
-import {window} from "rxjs";
 
 @Component({
   selector: 'app-login',
@@ -16,7 +12,7 @@ import {window} from "rxjs";
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
-
+  hide = true;
   public loginForm: FormGroup;
 
   constructor(
@@ -29,9 +25,11 @@ export class LoginComponent implements OnInit {
   ) {
     if(this.tokenStorage.getUser()) {
       if(this.tokenStorage.getRole() === 'ROLE_ADMIN') {
-        this.router.navigate(['main']);
+        this.router.navigate(['admin/main']);
+      } else if(this.tokenStorage.getRole() === 'ROLE_MANAGER') {
+        this.router.navigate(['manager/main'])
       } else {
-        this.router.navigate(['main-user']);
+        this.router.navigate(['user/main']);
       }
     }
   }
@@ -57,14 +55,15 @@ export class LoginComponent implements OnInit {
           this.tokenStorage.saveUser(res);
           this.notificationService.showSnackBar('Вітаємо, ' + this.tokenStorage.getUser().name);
 
-
           for(var i = 0; i < this.tokenStorage.getUser().roles.length; i++) {
-            if(this.tokenStorage.getUser().roles[i].name === 'ROLE_ADMIN') {
+            if(this.tokenStorage.getUser().roles[i].name === 'ROLE_ADMIN'||this.tokenStorage.getUser().roles[i].name === 'ROLE_MANAGER') {
               this.tokenStorage.setRole(this.tokenStorage.getUser().roles[i]);
+              console.log(this.tokenStorage.getRole());
               location.reload();
               break;
             }
             this.tokenStorage.setRole(this.tokenStorage.getUser().roles[i]);
+            console.log(this.tokenStorage.getRole());
             location.reload();
           }
         }

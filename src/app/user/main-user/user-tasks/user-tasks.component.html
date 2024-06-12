@@ -1,0 +1,237 @@
+<app-user-header></app-user-header>
+
+<div class="flex-wrapper">
+  <div style="margin-left: 40px; margin-top: 40px">
+
+    <h1>Ваші завдання</h1>
+
+    <div style="overflow-x: auto; overflow-y: hidden; white-space: nowrap;" cdkDropListGroup>
+      <div class="example-container">
+        <div class="head-title">Нові завдання<span *ngIf="tasksCreated.length > 0"> - {{tasksCreated.length}}</span></div>
+
+        <div style="background: rgba(169, 222, 255, 0.3)"
+             cdkDropList
+             [cdkDropListData]="tasksCreated"
+             class="example-list"
+        >
+          <div class="example-box" *ngFor="let item of tasksCreated" cdkDrag>
+
+            <div>
+              <div style="font-weight: 500; font-size: 16px">
+                {{item.name}}
+              </div>
+              <div style="display: flex">
+                <div *ngIf="item.priority === 'LOW'" style="background: rgba(0, 201, 67, 0.52); border-radius: 4px; padding-left: 7px; padding-right: 7px">
+                  Низький
+                </div>
+                <div *ngIf="item.priority === 'MEDIUM'" style="background: rgba(255, 149, 0, 0.6); border-radius: 4px; padding-left: 7px; padding-right: 7px">
+                  Середній
+                </div>
+                <div *ngIf="item.priority === 'HIGH'" style="background: tomato; border-radius: 4px; padding-left: 7px; padding-right: 7px">
+                  Високий
+                </div>
+              </div>
+
+              <div style="font-weight: 300; font-size: 14px">
+                Для: {{item.assignee.name}} {{item.assignee.surname}}
+              </div>
+              <div style="display: flex">
+                <div *ngIf="!item.overdue" style="background: white; font-weight: 400">
+                  {{item.dueTime}}
+                </div>
+                <div *ngIf="item.overdue" style="background: tomato; border-radius: 4px; padding-left: 7px; padding-right: 7px; font-weight: 400">
+                  {{item.dueTime}}
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <div style="position: absolute; right: 0; top: 0; font-weight: 300; font-size: 12px;background: rgba(169, 222, 255, 0.3);">
+                <div style="margin-left: 5px; margin-right: 5px; margin-top: 1px; margin-bottom: 1px">
+                  {{item.project.name}}
+                </div>
+              </div>
+              <button mat-icon-button (click)="moreAboutTask(item)" color="primary">
+                <mat-icon>more</mat-icon>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="example-container">
+        <div class="head-title">В процесі<span *ngIf="tasksInProgress.length > 0"> - {{tasksInProgress.length}}</span></div>
+
+        <div
+          style="background: rgba(169, 222, 255, 0.3)"
+          cdkDropList
+          [cdkDropListData]="tasksInProgress"
+          class="example-list"
+          (cdkDropListDropped)="dropToInProgress($event)">
+          <div class="example-box" *ngFor="let item of tasksInProgress" cdkDrag>
+            <div>
+              <div style="font-weight: 500; font-size: 16px">
+                {{item.name}}
+              </div>
+
+              <div style="display: flex">
+                <div *ngIf="item.priority === 'LOW'" style="background: rgba(0, 201, 67, 0.52); border-radius: 4px; padding-left: 7px; padding-right: 7px">
+                  Низький
+                </div>
+                <div *ngIf="item.priority === 'MEDIUM'" style="background: rgba(255, 149, 0, 0.6); border-radius: 4px; padding-left: 7px; padding-right: 7px">
+                  Середній
+                </div>
+                <div *ngIf="item.priority === 'HIGH'" style="background: tomato; border-radius: 4px; padding-left: 7px; padding-right: 7px">
+                  Високий
+                </div>
+              </div>
+
+              <div style="font-weight: 300; font-size: 14px">
+                Для: {{item.assignee.name}} {{item.assignee.surname}}
+              </div>
+              <div style="display: flex">
+                <div *ngIf="item.overdue" style="background: tomato; border-radius: 4px; padding-left: 7px; padding-right: 7px; font-weight: 400">
+                  {{item.dueTime}}
+                </div>
+                <div *ngIf="!item.overdue" style="background: white; font-weight: 400">
+                  {{item.dueTime}}
+                </div>
+              </div>
+            </div>
+            <div>
+              <div style="position: absolute; right: 0; top: 0; font-weight: 300; font-size: 12px;background: rgba(169, 222, 255, 0.3);">
+                <div style="margin-left: 5px; margin-right: 5px; margin-top: 1px; margin-bottom: 1px">
+                  {{item.project.name}}
+                </div>
+              </div>
+              <button mat-icon-button (click)="moreAboutTask(item)" color="primary">
+                <mat-icon>more</mat-icon>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="example-container">
+        <div class="head-title">На перевірці<span *ngIf="tasksOnReview.length > 0"> - {{tasksOnReview.length}}</span></div>
+
+        <div
+          style="background: rgba(169, 222, 255, 0.3)"
+          cdkDropList
+          [cdkDropListData]="tasksOnReview"
+          class="example-list"
+          (cdkDropListDropped)="dropToReview($event)">
+          <div class="example-box" *ngFor="let item of tasksOnReview"  cdkDrag>
+            <div>
+              <div style="font-weight: 500; font-size: 16px">
+                {{item.name}}
+              </div>
+
+              <div style="display: flex">
+
+                <div *ngIf="item.priority === 'LOW'" style="background: rgba(0, 201, 67, 0.52); border-radius: 4px; padding-left: 7px; padding-right: 7px">
+                  Низький
+                </div>
+                <div *ngIf="item.priority === 'MEDIUM'" style="background: rgba(255, 149, 0, 0.6); border-radius: 4px; padding-left: 7px; padding-right: 7px">
+                  Середній
+                </div>
+                <div *ngIf="item.priority === 'HIGH'" style="background: tomato; border-radius: 4px; padding-left: 7px; padding-right: 7px">
+                  Високий
+                </div>
+              </div>
+
+              <div style="font-weight: 300; font-size: 14px">
+                Для: {{item.assignee.name}} {{item.assignee.surname}}
+              </div>
+              <div style="display: flex">
+                <div *ngIf="item.overdue" style="background: tomato; border-radius: 4px; padding-left: 7px; padding-right: 7px; font-weight: 400">
+                  {{item.dueTime}}
+                </div>
+                <div *ngIf="!item.overdue" style="background: white; font-weight: 400">
+                  {{item.dueTime}}
+                </div>
+              </div>
+            </div>
+            <div>
+              <div style="position: absolute; right: 0; top: 0; font-weight: 300; font-size: 12px;background: rgba(169, 222, 255, 0.3);">
+                <div style="margin-left: 5px; margin-right: 5px; margin-top: 1px; margin-bottom: 1px">
+                  {{item.project.name}}
+                </div>
+              </div>
+              <button mat-icon-button (click)="moreAboutTask(item)" color="primary">
+                <mat-icon>more</mat-icon>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="example-container">
+        <div class="head-title">Виконані<span *ngIf="tasksReleased.length > 0"> - {{tasksReleased.length}}</span></div>
+        <div
+          style="background: rgba(169, 222, 255, 0.3)"
+          cdkDropList
+          [cdkDropListData]="tasksReleased"
+          class="example-list"
+          (cdkDropListDropped)="dropToRelease($event)">
+          <div class="example-box" *ngFor="let item of tasksReleased"  cdkDrag>
+            <mat-icon color="primary">check_circle</mat-icon>
+            <div>
+              <div style="font-weight: 500; font-size: 16px">
+                {{item.name}}
+              </div>
+
+              <div style="display: flex">
+                <div *ngIf="item.priority === 'LOW'" style="background: rgba(0, 201, 67, 0.52); border-radius: 4px; padding-left: 7px; padding-right: 7px">
+                  Низький
+                </div>
+                <div *ngIf="item.priority === 'MEDIUM'" style="background: rgba(255, 149, 0, 0.6); border-radius: 4px; padding-left: 7px; padding-right: 7px">
+                  Середній
+                </div>
+                <div *ngIf="item.priority === 'HIGH'" style="background: tomato; border-radius: 4px; padding-left: 7px; padding-right: 7px">
+                  Високий
+                </div>
+              </div>
+
+              <div style="font-weight: 300; font-size: 14px">
+                Для: {{item.assignee.name}} {{item.assignee.surname}}
+              </div>
+
+              <div style="display: flex">
+                <div *ngIf="item.overdue" style="background: tomato; border-radius: 4px; padding-left: 7px; padding-right: 7px; font-weight: 400">
+                  {{item.dueTime}}
+                </div>
+                <div *ngIf="!item.overdue" style="background: white; font-weight: 400">
+                  {{item.dueTime}}
+                </div>
+              </div>
+            </div>
+            <div>
+              <div style="position: absolute; right: 0; top: 0; font-weight: 300; font-size: 12px;background: rgba(169, 222, 255, 0.3);">
+                <div style="margin-left: 5px; margin-right: 5px; margin-top: 1px; margin-bottom: 1px">
+                  {{item.project.name}}
+                </div>
+              </div>
+              <button mat-icon-button (click)="moreAboutTask(item)" color="primary">
+                <mat-icon>more</mat-icon>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <app-footer></app-footer>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,148 @@
+<app-user-header></app-user-header>
+<div class="flex-wrapper">
+  <div class="container">
+    <div style="display: flex; flex-wrap: wrap; justify-content: center">
+      <mat-card class="example-card" >
+        <mat-card-title-group>
+          <mat-card-title style="font-size: 18px; ">Всього зроблено</mat-card-title>
+        </mat-card-title-group>
+        <mat-card-content>
+          <div style="display: flex; justify-content: center; align-items: center;">
+            <mat-icon color="primary">assignment_turned_in</mat-icon>
+            <div style="font-size: 18px; font-weight: 300; margin-right: 5px">
+              {{doneCount}}
+            </div>
+            <div style="font-size: 16px; font-weight: 300">
+              завдань
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+      <mat-card class="example-card" >
+        <mat-card-title-group>
+          <mat-card-title style="font-size: 18px">Cередня тривалість виконання</mat-card-title>
+        </mat-card-title-group>
+        <mat-card-content>
+          <div style="display: flex; justify-content: center; align-items: center;">
+            <mat-icon color="primary">access_time</mat-icon>
+            <div style="font-size: 18px; font-weight: 300; margin-right: 5px">
+              {{averageTime}}
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+      <mat-card class="example-card" >
+        <mat-card-title-group>
+          <mat-card-title style="font-size: 18px;">Найбільше за місяць</mat-card-title>
+        </mat-card-title-group>
+        <mat-card-content>
+          <div style="display: flex; justify-content: center; align-items: center;">
+            <mat-icon color="primary">event</mat-icon>
+            <div style="font-size: 18px; font-weight: 300; margin-right: 5px">
+              {{bestMonthTasks}}
+            </div>
+            <div style="font-size: 16px; font-weight: 300">
+               завдань
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+      <mat-card *ngIf="!hiddenClosest" class="example-card" >
+        <mat-card-title-group>
+          <mat-card-title style="font-size: 18px;">Накоротший термін виконання</mat-card-title>
+        </mat-card-title-group>
+        <mat-card-content>
+          <div style="display: flex; justify-content: center; align-items: center;">
+            <mat-icon color="primary">alarm_on</mat-icon>
+            <div style="font-size: 16px; font-weight: 300; margin-right: 5px;">
+              {{closestTask.name}} до {{closestTask.dueTime}}
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+    <div style="display: flex; flex-wrap: wrap">
+      <mat-card class="example-card" >
+        <mat-card-title-group>
+          <mat-card-title style="font-size: 20px">Завдань виконано вчасно</mat-card-title>
+        </mat-card-title-group>
+        <mat-card-content>
+          <div style="display: flex; justify-content: center; align-items: center;">
+            <circle-progress
+              [percent]=doneOnTime
+              [radius]="100"
+              [outerStrokeWidth]="16"
+              [innerStrokeWidth]="8"
+              [outerStrokeColor]="'#3f51b5'"
+              [innerStrokeColor]="'rgba(169, 222, 255, 0.7)'"
+              [animation]="true"
+              [animationDuration]="300"
+              [subtitle]="'Виконано вчасно'"
+              [titleFontSize]="'22px'"
+              [unitsFontSize]="'22px'"
+              [subtitleFontSize]="'14px'"
+            ></circle-progress>
+          </div>
+        </mat-card-content>
+      </mat-card>
+      <mat-card class="example-card">
+        <mat-card-title-group>
+          <mat-card-title style="font-size: 20px">Виконано завдань по місяцях (останні пів року)</mat-card-title>
+        </mat-card-title-group>
+        <mat-card-content>
+          <div style="display: flex; justify-content: center; justify-items: center">
+            <div >
+              <google-chart *ngIf="!hiddenTaskByMonth" #chart
+                            [type]="typeTaskByMonth"
+                            [data]="dataTaskByMonth"
+                            [columns]="columnNamesTaskByMonth"
+                            [options]="optionsTaskByMonth"
+                            [width]="900"
+                            [height]="250"
+
+              >
+              </google-chart>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+      <mat-card class="example-card">
+        <mat-card-title-group>
+          <mat-card-title style="font-size: 20px">Стадії виконання завдань</mat-card-title>
+        </mat-card-title-group>
+        <mat-card-content>
+          <div >
+            <google-chart *ngIf="!hiddenStage" #chart
+                          [type]="typeStage"
+                          [data]="dataStage"
+                          [columns]="columnNamesStage"
+                          [options]="optionsStage"
+                          [width]="550"
+                          [height]="300"
+            >
+            </google-chart>
+          </div>
+        </mat-card-content>
+      </mat-card>
+      <mat-card class="example-card">
+        <mat-card-title-group>
+          <mat-card-title style="font-size: 20px">Типи завдань</mat-card-title>
+        </mat-card-title-group>
+        <mat-card-content>
+          <div >
+            <google-chart *ngIf="!hiddenType" #chart
+                          [type]="typeType"
+                          [data]="dataType"
+                          [columns]="columnNamesType"
+                          [options]="optionsType"
+                          [width]="600"
+                          [height]="300"
+            >
+            </google-chart>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+  <app-footer></app-footer>
+</div>
